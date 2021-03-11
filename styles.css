@@ -1,0 +1,12 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+#canvas{
+	margin-top: 100px;
+	position: relative;
+	left: 30%;
+	box-sizing: border-box;
+	border: 1px solid silver;
+	border-radius: 5px;
+}
