@@ -70,6 +70,7 @@ function animate(){
     board.showBoard(ctx);
 	for(let i = 0; i < markedSqueres.length; i++)
 		board.showHiglightedSqueres(markedSqueres[i][0], markedSqueres[i][1]);
+	board.showLastMove();
     board.showPieces(ctx);
 	if(clicked)
     	clicked.showMovement(ctx, board.tileSize, board.board);	

@@ -24,8 +24,16 @@ class Board{
 		]
 		this.ctx = context;
 		this.board = this.fillPieces();
+		this.blackKing = this.board[0][0].white ? this.board[4][7] : this.board[4][0];
+		this.whiteKing = this.board[0][0].white ? this.board[4][0] : this.board[4][7]; 
 		this.board.whiteAtackMap = this.generateAtackMap(true);
 		this.board.blackAtackMap = this.generateAtackMap(false);
+		this.lastMove = {
+			prevX: -1,
+			prevY: -1,
+			nextX: -1,
+			nextY: -1
+		};
 	}
 
 	show(){
@@ -59,6 +67,12 @@ class Board{
 		}
 	}
 
+	showLastMove(){
+		this.ctx.fillStyle = "rgba(245, 201, 69, .5)";
+		this.ctx.fillRect(this.lastMove.prevX * this.tileSize, this.lastMove.prevY * this.tileSize, this.tileSize, this.tileSize);
+		this.ctx.fillRect(this.lastMove.nextX * this.tileSize, this.lastMove.nextY * this.tileSize, this.tileSize, this.tileSize);
+	}
+
 	showHiglightedSqueres(x, y){
 		this.ctx.fillStyle = "rgba(214, 11, 51, .5)";
 		this.ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
@@ -75,6 +89,8 @@ class Board{
 		
 		let color = Math.random() > .5 ? 'w' : 'b';
 		let PieceSet = color === 'w' ? this.pieceMapWhite : this.pieceMapBlack;
+
+
 		let dirUp = color === 'w' ? true : false;
 		for(let y = 0; y < tmp.length; y ++){
 			for(let x = 0; x < this.tiles; x ++){
@@ -134,19 +150,33 @@ class Board{
 	movePiece(piece, X, Y){
 		let x = Math.floor(X/this.tileSize);
 		let y = Math.floor(Y/this.tileSize);
-		if(!this.board[x][y] && piece.checkMove(x, y, this.board)){
+		if(!this.board[x][y] && piece.checkMove(x, y, this.board) && this.isKingSafe(piece, x, y)){
 			this.board[piece.x][piece.y] = null;
 			if(piece instanceof Pawn)
 				piece.moved = true;
+			
+			this.lastMove.prevX = piece.x;
+			this.lastMove.prevY = piece.y;
+			this.lastMove.nextX = x;
+			this.lastMove.nextY = y;
+
 			piece.x = x;
 			piece.y = y;
 			this.board[x][y] = piece;
+			
+
 		}
-		else if(this.board[x][y] && piece.checkMove(x, y, this.board)){
+		else if(this.board[x][y] && piece.checkMove(x, y, this.board) && this.isKingSafe(piece, x, y)){
 			this.board[x][y] = null;
 			this.board[piece.x][piece.y] = null;
 			if(piece instanceof Pawn)
 				piece.moved = true;
+
+			this.lastMove.prevX = piece.x;
+			this.lastMove.prevY = piece.y;
+			this.lastMove.nextX = x;
+			this.lastMove.nextY = y;
+
 			piece.x = x;
 			piece.y = y;
 			this.board[x][y] = piece;
@@ -215,5 +245,36 @@ class Board{
 		}
 
 		return arr;
+	}
+
+	isKingSafe(piece, x, y){
+		const pieceCord = {
+			x: piece.x,
+			y: piece.y
+		}
+
+		const last = this.board[x][y];
+		this.board[x][y] = null;
+		this.board[piece.x][piece.y] = null;
+
+		piece.x = x;
+		piece.y = y;
+		this.board[x][y] = piece;
+
+		let king = piece.white ? this.whiteKing : this.blackKing;
+		let futureState = this.generateAtackMap(!piece.white);
+
+		if(futureState[king.x][king.y] === 1){
+			this.board[pieceCord.x][pieceCord.y] = piece;
+			this.board[x][y] = last;
+			piece.x = pieceCord.x;
+			piece.y = pieceCord.y;
+			return false;
+		}
+		this.board[pieceCord.x][pieceCord.y] = piece;
+		this.board[x][y] = last;
+		piece.x = pieceCord.x;
+		piece.y = pieceCord.y;
+		return true;
 	}
 }
