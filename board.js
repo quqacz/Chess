@@ -96,40 +96,40 @@ class Board{
 			for(let x = 0; x < this.tiles; x ++){
 				switch(PieceSet[y][x]){
 					case 6:
-					tmp[x][y] = new Rook(x, y, false);
+					tmp[x][y] = new Rook(x, y, false, this);
 					break;
 					case 5:
-					tmp[x][y] = new Knight(x, y, false);
+					tmp[x][y] = new Knight(x, y, false, this);
 					break;
 					case 4:
-					tmp[x][y] = new Bishop(x, y, false);
+					tmp[x][y] = new Bishop(x, y, false, this);
 					break;
 					case 3:
-					tmp[x][y] = new Queen(x, y, false);
+					tmp[x][y] = new Queen(x, y, false, this);
 					break;
 					case 2:
-					tmp[x][y] = new King(x, y, false);
+					tmp[x][y] = new King(x, y, false, this);
 					break;
 					case 1:
-					tmp[x][y] = new Pawn(x, y, false, color === 'w' ? !dirUp : !dirUp);
+					tmp[x][y] = new Pawn(x, y, false, color === 'w' ? !dirUp : !dirUp, this);
 					break;
 					case 16:
-					tmp[x][y] = new Rook(x, y, true);
+					tmp[x][y] = new Rook(x, y, true, this);
 					break;
 					case 15:
-					tmp[x][y] = new Knight(x, y, true);
+					tmp[x][y] = new Knight(x, y, true, this);
 					break;
 					case 14:
-					tmp[x][y] = new Bishop(x, y, true);
+					tmp[x][y] = new Bishop(x, y, true, this);
 					break;
 					case 13:
-					tmp[x][y] = new Queen(x, y, true);
+					tmp[x][y] = new Queen(x, y, true, this);
 					break;
 					case 12:
-					tmp[x][y] = new King(x, y, true);
+					tmp[x][y] = new King(x, y, true, this);
 					break;
 					case 11:
-					tmp[x][y] = new Pawn(x, y, true, color === 'w' ? dirUp : dirUp);
+					tmp[x][y] = new Pawn(x, y, true, color === 'w' ? dirUp : dirUp, this);
 					break;
 					default:
 					break;
